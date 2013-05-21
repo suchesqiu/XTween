@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset=utf-8 />
+        <title>easing demo - suches template</title>
+        <script src="../src/XTweenAlg.js"></script>
+        <script src="../src/common.js"></script>
+        <script src="../src/data/XTweenMotionType.js"></script>
+        <script src="../src/data/XTweenElementPosition.js"></script>
+        <script src="../src/model/XTweenModel.js"></script>
+        <script src="../src/model/XTweenTimeModel.js"></script>
+        <script src="../src/model/XTweenValueModel.js"></script>
+        <script src="../src/view/XTweenView.js"></script>
+        <script src="../src/XTween.js"></script>
+
+        <link href='test.common.css' rel='stylesheet' />
+        <script src="qwrap.js"></script>
+        <script src="test.common.js"></script>
+    </head>    
+    <body>
+        <div class="bd cclear">
+            <div id="wrapper" class="wrapper">
+                <div id="rec" class="rec" style="left: 150px; top: 150px;" ></div> 
+            </div>
+            <div class="sidebar">
+                <dl class="cclear">
+                    <dt>motion type</dt>
+                    <dd>
+                    <input type="radio" name="motion_type" value="XTweenTimeModel" id="motion_type_time" checked />
+                    <label for="motion_type_time">By Time</label>
+
+                    <input type="radio" name="motion_type" value="XTweenValueModel" id="motion_type_value" />
+                    <label for="motion_type_value">By Value</label>
+                    </dd>
+               </dl>
+               <dl class='mtype_value'>
+                   <dd value_type="XTweenTimeModel" style="display:none" >duration: <input type="text" value=".5" size="4"/>second</dd>
+                   <dd value_type="XTweenValueModel" style="display:none" >motion step: <input type="text" value="5" size="4" />pixel</dd>
+               </dl>
+               <dl class="attr_list" style="margin-top:10px">
+                   <dt>motion by attributes</dt>
+                   <dd> 
+                   <input type='checkbox' name='attr_list' value='left' id="attr_list_left" />
+                   <label for="attr_list_left">left</label>
+                   <input type='text' value='auto' size="4" name="begin" />
+                   - <input type='text' value='300' size="4" name="end" />
+                   </dd>
+                   <dd> 
+                   <input type='checkbox' name='attr_list' value='top' id="attr_list_top" />
+                   <label for="attr_list_top">top</label>
+                   <input type='text' value='0' size="4" name="begin" />
+                   - <input type='text' value='200' size="4" name="end" />
+                   </dd>
+                   <dd> 
+                   <input type='checkbox' name='attr_list' value='width' id="attr_list_width" checked />
+                   <label for="attr_list_width">width</label>
+                   <input type='text' value='0' size="4" name="begin" />
+                   - <input type='text' value='200' size="4" name="end" />
+                   </dd>
+                   <dd> 
+                   <input type='checkbox' name='attr_height' value='height' id="attr_list_height" checked />
+                   <label for="attr_list_height">height</label>
+                   <input type='text' value='0' size="4" name="begin" />
+                   - <input type='text' value='200' size="4" name="end" />
+                   </dd>
+                   <dd> 
+                   <input type='checkbox' name='attr_list' value='opacity' id="attr_list_opacity" />
+                   <label for="attr_list_opacity">opacity</label>
+                   <input type='text' value='auto' size="4" name="begin" />
+                   - <input type='text' value='100' size="4" name="end" />
+                   </dd>
+                   <dd> 
+                   <input type='checkbox' name='attr_list' value='opacity' id="attr_list_opacity_down" />
+                   <label for="attr_list_opacity_down">opacity</label>
+                   <input type='text' value='auto' size="4" name="begin" />
+                   - <input type='text' value='0' size="4" name="end" />
+                   </dd>
+
+               </dl>
+            </div>
+        </div>
+
+        <div id="btn_box" class="btn_box cclear"></div>
+
+        <script type='text/javascript'>
+
+            XTween.debug = true;
+            XTween.log( 1, 2, 3 );
+
+            var forward = true;
+
+            function test_f( $ele ){
+
+                XTween.clean( W('#rec')[0] );
+
+                var l = 300, t = 200;
+
+                if( forward ){
+
+                }else{
+                    l = 0, t = 0;
+                }
+
+                var attr_obj = get_attrs();
+
+                XTween.log( Object.stringify( attr_obj ) );
+
+                var tn = 
+                    XTween.add
+                    ( 
+                     'rec'
+                     , attr_obj
+                     , get_type_value_f()
+                     , $ele.value
+                     , function(){
+
+                     }
+                     ,{ 
+                     'tickCallback':
+                     function(){
+
+                     }
+                     , motion_type: W('input[name=motion_type]:checked').val()
+                     }
+                    );
+
+                forward = !forward;
+            }
+
+W(document).delegate( '#wrapper', 'click', function( $evt ){
+
+    //ele_pos_f( W('#rec')[0], true ); return;
+
+
+    var rel_pos_obj = mouse_relative_pos_f( id_f('wrapper'), $evt );
+    var rec_pos_obj = ele_pos_f( id_f('rec'), true );
+
+    var ttype = W('input[name=ttype]:checked')[0];
+    if( ttype && ttype.value ) ttype = ttype.value; else ttype = 'linear'
+
+    XTween.clean( id_f('rec') );
+
+    var l = rel_pos_obj.left, t = rel_pos_obj.top;
+    var w = rel_pos_obj.left - rec_pos_obj.left;
+    var h = rel_pos_obj.top - rec_pos_obj.top;
+
+    var attr_obj = get_attrs();
+    refine_attr( attr_obj, 'left', l );
+    refine_attr( attr_obj, 'top', t );
+    refine_attr( attr_obj, 'width', w );
+    refine_attr( attr_obj, 'height', h );
+
+    XTween.log( Object.stringify( attr_obj ) );
+
+    var tn = 
+        XTween.add
+        ( 
+         'rec'
+         , attr_obj
+         , get_type_value_f()
+         , ttype
+         , function(){
+         }
+         ,{ 
+         'tickCallback':
+         function(){
+
+         }
+         , delay: 0
+         , motion_type: W('input[name=motion_type]:checked').val()
+         }
+        );
+    }
+);
+
+var btn_ls = [];
+var checked = ' checked ';
+btn_ls.push( '<dl>' );
+for( var k in window.XTweenAlg ){
+    btn_ls.push( 
+            format_f( '<dd><input type="radio" name="ttype" onclick="test_f(this)" value="{0}" id="tween_{0}" {1} /><label for="tween_{0}">{0}</label></dd>', k, checked )
+            );
+    checked = '';
+}
+btn_ls.push('</dl>');
+
+W('#btn_box').html( btn_ls.join('') );
+opacity_f( W('#rec')[0], 50 );
+W(document).delegate( 'input[name=motion_type]', 'click', function( $evt ){
+    var v = W(this).val();
+    W('dl.mtype_value dd').hide();
+    W('dl.mtype_value dd[value_type='+v+']').show();
+});
+W('input[name=motion_type]:checked').fire('click');
+
+//W('input[value=easeOutElastic]').attr('checked', true);
+W('input[value=linear]').attr('checked', true);
+//XTween.log( opacity_f( id_f('rec' ) ) );
+
+</script>
+
+
+    </body>
+</html>
+

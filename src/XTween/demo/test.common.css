@@ -1,0 +1,59 @@
+*{
+    margin: 0; padding: 0;
+}
+
+.cclear{zoom:1;}
+.cclear:after{content:".";display:block;visibility:hidden;height:0;clear:both;}
+
+body{ 
+    width: 720px;
+    margin: 20px auto 0;
+}
+
+.bd{
+    clear: both;
+}
+
+.wrapper{
+    position: relative;
+    width: 400px;
+    height: 400px;
+    background: #ccc;
+    float: left;
+}
+
+.sidebar{
+    float: left;
+    width: 260px;
+}
+
+.rec{
+    width: 30px;
+    height: 30px;
+    background: #000;
+    position: absolute;
+    overflow:hidden;
+}
+
+.btn_box{
+
+}
+
+.btn_box button{
+}
+
+.btn_box label{
+}
+
+.btn_box dl{
+    clear: both;
+    margin: 2px 0;
+}
+
+.btn_box dl dd{
+    float: left;
+    width: 180px;
+    margin: 2px 0;
+}
+
+
